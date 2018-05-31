@@ -1,5 +1,6 @@
 package tw.edu.shu.im.noteapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int ADD_ITEM = 1;
     private ListView mListView;
     private ArrayAdapter mAdapter;
 
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setTitle("簡單記事APP");
+
 
         // 建立測試資料
         if (ItemManager.getAllItem().size() <= 0) {
@@ -46,9 +49,25 @@ public class MainActivity extends AppCompatActivity {
         // 點下App右上角的按鈕
         if (item.getItemId() == R.id.menu_add) {
             Log.d("Menu", "點下新增按鈕");
+            Intent intent = new Intent(this, AddItemActivity.class);
+            startActivityForResult(intent, ADD_ITEM);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_ITEM && resultCode == RESULT_OK) {
+            // 新增資料回來，加入到ItemManager中
+            boolean needUpdate = data.getBooleanExtra("update", false);
+            if (needUpdate) {
+                mAdapter.clear();
+                mAdapter.addAll(ItemManager.getAllItem());
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 }

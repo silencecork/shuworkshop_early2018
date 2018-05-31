@@ -39,6 +39,23 @@ public class AddItemActivity extends AppCompatActivity {
         // 點下儲存按鈕
         if (item.getItemId() == R.id.menu_save) {
             Log.d("Menu", "點下儲存按鈕");
+
+            // 取得目前畫面上打的標題與內文
+            String title = mTitleEditText.getEditableText().toString();
+            String note = mNoteEditText.getEditableText().toString();
+
+            // 儲存到ItemManager
+            ItemManager.addItem(title, note);
+
+            // 建立Intent把要帶回前一個Activity的值存下來
+            Intent data = new Intent();
+            data.putExtra("update", true);
+
+            // 帶回前一個Activity
+            setResult(RESULT_OK, data);
+
+            // 關閉目前Activity，以便呈現上一個Activity
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

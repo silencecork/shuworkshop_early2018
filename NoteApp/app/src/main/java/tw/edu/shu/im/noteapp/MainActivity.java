@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int ADD_ITEM = 1;
+    private static final int UPDATE_ITEM = 2;
     private ListView mListView;
     private ArrayAdapter mAdapter;
 
@@ -21,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setTitle("簡單記事APP");
-
 
         // 建立測試資料
         if (ItemManager.getAllItem().size() <= 0) {
@@ -35,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
         mListView.setAdapter(mAdapter);
 
+        // 點擊ListView單一項目可以進行
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, ModifyItemActivity.class);
+                intent.putExtra("index", position);
+                startActivityForResult(intent, UPDATE_ITEM);
+            }
+        });
     }
 
     @Override
@@ -62,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == ADD_ITEM && resultCode == RESULT_OK) {
             // 新增資料回來，加入到ItemManager中
+            boolean needUpdate = data.getBooleanExtra("update", false);
+            if (needUpdate) {
+                mAdapter.clear();
+                mAdapter.addAll(ItemManager.getAllItem());
+                mAdapter.notifyDataSetChanged();
+            }
+        } else if (requestCode == UPDATE_ITEM &&resultCode == RESULT_OK) {
+            // 更新資料回來
             boolean needUpdate = data.getBooleanExtra("update", false);
             if (needUpdate) {
                 mAdapter.clear();

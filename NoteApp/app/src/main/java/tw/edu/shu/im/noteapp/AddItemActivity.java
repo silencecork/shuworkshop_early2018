@@ -44,7 +44,7 @@ public class AddItemActivity extends AppCompatActivity {
             String title = mTitleEditText.getEditableText().toString();
             String note = mNoteEditText.getEditableText().toString();
 
-            // 儲存到ItemManager
+            // 儲存資料
             ItemManager.addItem(title, note);
 
             // 建立Intent把要帶回前一個Activity的值存下來

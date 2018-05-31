@@ -6,7 +6,6 @@ package tw.edu.shu.im.noteapp;
 public class TestDataCreator {
 
     public TestDataCreator() {
-
     }
 
     public void createTestData(int recordCount) {

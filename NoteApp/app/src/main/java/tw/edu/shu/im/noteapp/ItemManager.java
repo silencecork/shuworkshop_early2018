@@ -1,6 +1,7 @@
 package tw.edu.shu.im.noteapp;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ItemManager {
 
@@ -17,7 +18,9 @@ public class ItemManager {
         item.title = title;
         item.note = note;
 
-        sItemList.add(item);
+        // 儲存到資料庫
+        item.save();
+        refreshItems();
     }
 
     /**
@@ -26,6 +29,9 @@ public class ItemManager {
      * @return
      */
     public static ArrayList<Item> getAllItem(){
+        if (sItemList.size() == 0) {
+            refreshItems();
+        }
         return (ArrayList<Item>) sItemList.clone();
     }
 
@@ -50,8 +56,9 @@ public class ItemManager {
         Item item = sItemList.get(index);
         item.title = newTitleValue;
         item.note = newNoteValue;
-        sItemList.remove(item);
-        sItemList.add(index, item);
+        // 更新後儲存到資料庫
+        item.save();
+        refreshItems();
     }
 
     /**
@@ -60,7 +67,20 @@ public class ItemManager {
      * @param index
      */
     public static void deleteItem(int index) {
-        sItemList.remove(index);
+        Item item = sItemList.get(index);
+        // 從資料庫中刪除資料
+        item.delete();
+        refreshItems();
     }
+
+    private static void refreshItems() {
+        sItemList.clear();
+        Iterator<Item> allItemsItr = Item.findAll(Item.class);
+        while (allItemsItr.hasNext()) {
+            Item item = allItemsItr.next();
+            sItemList.add(item);
+        }
+    }
+
 
 }

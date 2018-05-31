@@ -1,6 +1,8 @@
 package tw.edu.shu.im.noteapp;
 
-public class Item {
+import com.orm.SugarRecord;
+
+public class Item extends SugarRecord {
 
     // 標題
     public String title;

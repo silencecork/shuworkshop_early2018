@@ -1,7 +1,9 @@
 package tw.edu.shu.im.noteapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -44,6 +46,30 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ModifyItemActivity.class);
                 intent.putExtra("index", position);
                 startActivityForResult(intent, UPDATE_ITEM);
+            }
+        });
+
+        // 長按ListView可以進行刪除
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("刪除")
+                        .setMessage("確定要刪除此項目嗎?")
+                        .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ItemManager.deleteItem(position);
+                                mAdapter.clear();
+                                mAdapter.addAll(ItemManager.getAllItem());
+                                mAdapter.notifyDataSetChanged();
+
+                            }
+                        })
+                        .setNegativeButton("取消", null);
+
+                builder.show();
+                return true;
             }
         });
     }

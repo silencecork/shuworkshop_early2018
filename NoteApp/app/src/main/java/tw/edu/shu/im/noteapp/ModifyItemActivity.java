@@ -24,8 +24,9 @@ public class ModifyItemActivity extends AppCompatActivity {
 
         setTitle("更新項目");
 
-        // 取得更新項目的資料是在列表中的哪一個位置
+        // 取得更新項目的資料，包含標題、內文、是在列表中的哪一個位置
         mIndex = getIntent().getIntExtra("index", 0);
+
         Item item = ItemManager.getItem(mIndex);
 
         mTitleEditText = findViewById(R.id.title);
@@ -46,6 +47,7 @@ public class ModifyItemActivity extends AppCompatActivity {
                 // 建立Intent把要帶回前一個Activity的值存下來
                 Intent data = new Intent();
                 data.putExtra("update", true);
+
 
                 // 帶回前一個Activity
                 setResult(RESULT_OK, data);
